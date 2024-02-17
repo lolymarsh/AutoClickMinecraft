@@ -7,10 +7,22 @@ import numpy as np
 import win32api
 import time
 
-def RightClickWithOutMouse(hwnd, x, y):
+
+def SendCtrlAndQ(hwnd):
+    win32gui.SendMessage(hwnd, win32con.WM_KEYDOWN, win32con.VK_CONTROL, 0)
+    win32gui.SendMessage(hwnd, win32con.WM_KEYDOWN, ord('Q'), 0)
+    win32gui.SendMessage(hwnd, win32con.WM_KEYUP, ord('Q'), 0)
+    win32gui.SendMessage(hwnd, win32con.WM_KEYUP, win32con.VK_CONTROL, 0)
+
+def LeftClickWithOutMouse(hwnd, x, y):
     lParam = win32api.MAKELONG(x, y)
     win32gui.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
     win32gui.SendMessage(hwnd, win32con.WM_LBUTTONUP, 0, lParam)
+
+def RightClickWithOutMouse(hwnd, x, y):
+    lParam = win32api.MAKELONG(x, y)
+    win32gui.SendMessage(hwnd, win32con.WM_RBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+    win32gui.SendMessage(hwnd, win32con.WM_RBUTTONUP, 0, lParam)
 
 # หาจอเกม
 def background_screenshot(hwnd, width, height):
@@ -48,8 +60,9 @@ try:
         game_screenshot = background_screenshot(hWnd, 1280, 960)
 
 
-        time.sleep(0.033)
+        time.sleep(2)
         RightClickWithOutMouse(hWnd, 100, 100)
+        # SendCtrlAndQ(hWnd)
 
         bgr_screenshot = cv2.cvtColor(game_screenshot, cv2.COLOR_RGB2BGR)
         # cv2.imshow("Grayscale Screenshot", bgr_screenshot)
